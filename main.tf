@@ -18,7 +18,7 @@ resource "aws_secretsmanager_secret" "sm" {
 }
 
 resource "aws_secretsmanager_secret_version" "sm-sv" {
-  for_each      = { for k, v in var.secrets : k => v if !var.unmanaged }
+  for_each      = { for k, v in var.secrets : k => v if !try(v["unmanaged"], true) }
   secret_id     = each.key
   secret_string = lookup(each.value, "secret_string", null) != null ? lookup(each.value, "secret_string", null) : (lookup(each.value, "secret_key_value", null) != null ? jsonencode(lookup(each.value, "secret_key_value", {})) : null)
   secret_binary = lookup(each.value, "secret_binary", null) != null ? base64encode(lookup(each.value, "secret_binary")) : null
@@ -31,7 +31,7 @@ resource "aws_secretsmanager_secret_version" "sm-sv" {
 }
 
 resource "aws_secretsmanager_secret_version" "sm-svu" {
-  for_each      = { for k, v in var.secrets : k => v if var.unmanaged }
+  for_each      = { for k, v in var.secrets : k => v if try(v["unmanaged"], true) }
   secret_id     = each.key
   secret_string = lookup(each.value, "secret_string", null) != null ? lookup(each.value, "secret_string") : (lookup(each.value, "secret_key_value", null) != null ? jsonencode(lookup(each.value, "secret_key_value", {})) : null)
   secret_binary = lookup(each.value, "secret_binary", null) != null ? base64encode(lookup(each.value, "secret_binary")) : null
