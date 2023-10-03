@@ -38,9 +38,13 @@ variable "tags" {
 }
 
 variable "region" {
+  description = "Specifies the relevant region for the app's secrets' values."
   default = ""
+  type = string
 }
 
 variable "environment" {
+  description = "Specifies the relevant environment for the app's secrets' values."
   default = ""
+  type = string
 }
