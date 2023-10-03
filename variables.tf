@@ -36,3 +36,11 @@ variable "tags" {
   type        = any
   default     = {}
 }
+
+variable "region" {
+  default = ""
+}
+
+variable "environment" {
+  default = ""
+}
