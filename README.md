@@ -217,14 +217,14 @@ module "secrets-manager-5" {
 module "secrets-manager-tf-outputs-to-argo" {
   source = "lgallard/secrets-manager/aws"
   
-  tf_outputs = true # Must be set to true when using the module to publish TF outputs for argo
   region = "us-east-1" # Must provide when using the module to publish TF outputs for argo
   environment = "nvq2" # Must provide when using the module to publish TF outputs for argo
   secrets = {
     secret-kv-1 = {
-      description = "This is a key/value secret constructed by TF outputs"
-      cluster_name = "your_cluster_name" # Must provide when using the module to publish TF outputs for argo
       secret_string = {
+        description = "This is a key/value secret constructed by TF outputs"
+        cluster_name = "the_cluster_name_consumes_the_secret" # Must provide when using the module to publish TF outputs for argo
+        tf_outputs = true # Must be set to true when using the module to publish TF outputs for argo
         key1 = templatefile("${secret_template_file_path}", { ROLE_ARN = "${module.moduleA.some_output}"})
         key1 = templatefile("${secret_template_file_path}", { ROLE_ARN = "${module.moduleB.some_output}"})
       }
