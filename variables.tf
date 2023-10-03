@@ -36,3 +36,15 @@ variable "tags" {
   type        = any
   default     = {}
 }
+
+variable "region" {
+  description = "Specifies the relevant region for the app's secrets' values."
+  type = string
+  default = ""
+}
+
+variable "environment" {
+  description = "Specifies the relevant environment for the app's secrets' values."
+  type = string
+  default = ""
+}

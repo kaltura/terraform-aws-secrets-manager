@@ -1,7 +1,7 @@
 resource "aws_secretsmanager_secret" "sm" {
   for_each                       = var.secrets
-  name                           = lookup(each.value, "name_prefix", null) == null ? each.key : null
-  name_prefix                    = lookup(each.value, "name_prefix", null) != null ? lookup(each.value, "name_prefix") : null
+  name                           = try(each.value["tf_outputs"], false) ? "/${each.key}/${var.region}/${var.environment}/${each.value["cluster_name"]}/values.yaml" : (lookup(each.value, "name_prefix", null) == null ? each.key : null)
+  name_prefix                    = try(each.value["tf_outputs"], false) ? null : (lookup(each.value, "name_prefix", null) != null ? lookup(each.value, "name_prefix") : null)
   description                    = lookup(each.value, "description", null)
   kms_key_id                     = lookup(each.value, "kms_key_id", null)
   policy                         = lookup(each.value, "policy", null)

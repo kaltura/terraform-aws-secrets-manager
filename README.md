@@ -211,6 +211,35 @@ module "secrets-manager-5" {
 }
 ```
 
+### TF Outputs (string secrets) to be consumed by Argo
+
+```
+module "secrets-manager-tf-outputs-to-argo" {
+  source = "lgallard/secrets-manager/aws"
+  
+  region = "us-east-1" # Must provide when using the module to publish TF outputs for argo
+  environment = "nvq2" # Must provide when using the module to publish TF outputs for argo
+  secrets = {
+    secret-kv-1 = {
+      secret_string = {
+        description = "This is a key/value secret constructed by TF outputs"
+        cluster_name = "the_cluster_name_consumes_the_secret" # Must provide when using the module to publish TF outputs for argo
+        tf_outputs = true # Must be set to true when using the module to publish TF outputs for argo
+        key1 = templatefile("${secret_template_file_path}", { ROLE_ARN = "${module.moduleA.some_output}"})
+        key1 = templatefile("${secret_template_file_path}", { ROLE_ARN = "${module.moduleB.some_output}"})
+      }
+    },
+  }
+
+  tags = {
+    Owner       = "DevOps team"
+    Environment = "dev"
+    Terraform   = true
+  }
+}
+
+```
+
 ## Secrets replication
 
 You can define different type of secrets (string, key/value or binary) in the same `secrets` or `rotate_secrets` map:
@@ -356,6 +385,8 @@ No modules.
 | <a name="input_secrets"></a> [secrets](#input\_secrets) | Map of secrets to keep in AWS Secrets Manager | `any` | `{}` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | Specifies a key-value map of user-defined tags that are attached to the secret. | `any` | `{}` | no |
 | <a name="input_unmanaged"></a> [unmanaged](#input\_unmanaged) | Terraform must ignore secrets lifecycle. Using this option you can initialize the secrets and rotate them outside Terraform, thus, avoiding other users to change or rotate the secrets by subsequent runs of Terraform | `bool` | `false` | no |
+| <a name="input_environment"></a> [environment](#input\_environment) | Must provide when using the module to write TF outputs to be fetched by Argo. This value Specifies the relevant environment for the app's secrets' values. | `string` | `` | no |
+| <a name="input_region"></a> [region](#input\_region) | Must provide when using the module to write TF outputs to be fetched by Argo. This value Specifies the relevant region for the app's secrets' values. | `string` | `` | no |
 
 ## Outputs
 
