@@ -386,6 +386,7 @@ No modules.
 | <a name="input_tags"></a> [tags](#input\_tags) | Specifies a key-value map of user-defined tags that are attached to the secret. | `any` | `{}` | no |
 | <a name="input_unmanaged"></a> [unmanaged](#input\_unmanaged) | Terraform must ignore secrets lifecycle. Using this option you can initialize the secrets and rotate them outside Terraform, thus, avoiding other users to change or rotate the secrets by subsequent runs of Terraform | `bool` | `false` | no |
 | <a name="input_environment"></a> [environment](#input\_environment) | Must provide when using the module to write TF outputs to be fetched by Argo. This value Specifies the relevant environment for the app's secrets' values. | `string` | `` | no |
+| <a name="input_region"></a> [region](#input\_region) | Must provide when using the module to write TF outputs to be fetched by Argo. This value Specifies the relevant region for the app's secrets' values. | `string` | `` | no |
 
 ## Outputs
 
