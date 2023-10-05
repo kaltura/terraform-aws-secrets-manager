@@ -18,7 +18,7 @@ You can create secrets for plain texts, keys/values and binary data:
 ```
 module "secrets-manager-1" {
 
-  source = "lgallard/secrets-manager/aws"
+  source = "github.com/kaltura/terraform-aws-secrets-manager?ref=<tag>"
 
   secrets = {
     secret-1 = {
@@ -47,7 +47,7 @@ module "secrets-manager-1" {
 ```
 module "secrets-manager-2" {
 
-  source = "lgallard/secrets-manager/aws"
+  source = "github.com/kaltura/terraform-aws-secrets-manager?ref=<tag>"
 
   secrets = {
     secret-kv-1 = {
@@ -85,7 +85,7 @@ module "secrets-manager-2" {
 ```
 module "secrets-manager-3" {
 
-  source = "lgallard/secrets-manager/aws"
+  source = "github.com/kaltura/terraform-aws-secrets-manager?ref=<tag>"
 
   secrets = {
     secret-binary-1 = {
@@ -120,8 +120,7 @@ If you need to rotate your secrets, use `rotate_secrets` map to define them. Tak
 ```
 module "secrets-manager-4" {
 
-  #source = "lgallard/secrets-manager/aws"
-  source = "../../"
+  source = "github.com/kaltura/terraform-aws-secrets-manager?ref=<tag>"
 
   rotate_secrets = {
     secret-rotate-1 = {
@@ -149,8 +148,7 @@ module "secrets-manager-4" {
 # Lambda to rotate secrets
 # AWS temaplates available here https://github.com/aws-samples/aws-secrets-manager-rotation-lambdas
 module "rotate_secret_lambda" {
-  source  = "spring-media/lambda/aws"
-  version = "5.2.0"
+  source = "github.com/kaltura/terraform-aws-secrets-manager?ref=<tag>"
 
   filename         = "secrets_manager_rotation.zip"
   function_name    = "secrets-manager-rotation"
@@ -181,7 +179,7 @@ You can define different type of secrets (string, key/value or binary) in the sa
 ```
 module "secrets-manager-5" {
 
-  source = "lgallard/secrets-manager/aws"
+  source = "github.com/kaltura/terraform-aws-secrets-manager?ref=<tag>"
 
   secrets = {
     secret-plain = {
@@ -215,18 +213,17 @@ module "secrets-manager-5" {
 
 ```
 module "secrets-manager-tf-outputs-to-argo" {
-  source = "lgallard/secrets-manager/aws"
+  source = "github.com/kaltura/terraform-aws-secrets-manager?ref=<tag>"
   
   region = "us-east-1" # Must provide when using the module to publish TF outputs for argo
   environment = "nvq2" # Must provide when using the module to publish TF outputs for argo
   secrets = {
     secret-kv-1 = {
-      secret_string = {
-        description = "This is a key/value secret constructed by TF outputs"
-        cluster_name = "the_cluster_name_consumes_the_secret" # Must provide when using the module to publish TF outputs for argo
-        tf_outputs = true # Must be set to true when using the module to publish TF outputs for argo
-        key1 = templatefile("${secret_template_file_path}", { ROLE_ARN = "${module.moduleA.some_output}"})
-        key1 = templatefile("${secret_template_file_path}", { ROLE_ARN = "${module.moduleB.some_output}"})
+        description = "This is a key/value secret constructed by TF outputs" # Required
+        secret_name_override = "appA" # Optional: if we want another name for our secret rather then the item key ("secret-kv-1")
+        cluster_name = "the_cluster_name_consumes_the_secret" # Required: Must provide when using the module to publish TF outputs for argo
+        tf_outputs = true # Required: Must be set to true when using the module to publish TF outputs for argo
+        secret_string = templatefile("${secret_template_file_path}", { ROLE_ARN = "${module.moduleA.some_output}"}) # Required
       }
     },
   }
@@ -247,7 +244,7 @@ You can define different type of secrets (string, key/value or binary) in the sa
 ```
 module "secrets-manager-6" {
 
-  source = "lgallard/secrets-manager/aws"
+  source = "github.com/kaltura/terraform-aws-secrets-manager?ref=<tag>"
 
   secrets = {
     secret-plain = {
