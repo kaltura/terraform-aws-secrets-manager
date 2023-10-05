@@ -219,11 +219,11 @@ module "secrets-manager-tf-outputs-to-argo" {
   environment = "nvq2" # Must provide when using the module to publish TF outputs for argo
   secrets = {
     secret-kv-1 = {
-        description = "This is a key/value secret constructed by TF outputs"
-        secret_name_override = "appA" # if we want another name for our secret rather then the item key ("secret-kv-1")
-        cluster_name = "the_cluster_name_consumes_the_secret" # Must provide when using the module to publish TF outputs for argo
-        tf_outputs = true # Must be set to true when using the module to publish TF outputs for argo
-        secret_string = templatefile("${secret_template_file_path}", { ROLE_ARN = "${module.moduleA.some_output}"})
+        description = "This is a key/value secret constructed by TF outputs" # Required
+        secret_name_override = "appA" # Optional: if we want another name for our secret rather then the item key ("secret-kv-1")
+        cluster_name = "the_cluster_name_consumes_the_secret" # Required: Must provide when using the module to publish TF outputs for argo
+        tf_outputs = true # Required: Must be set to true when using the module to publish TF outputs for argo
+        secret_string = templatefile("${secret_template_file_path}", { ROLE_ARN = "${module.moduleA.some_output}"}) # Required
       }
     },
   }
