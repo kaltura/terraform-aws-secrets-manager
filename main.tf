@@ -1,6 +1,6 @@
 resource "aws_secretsmanager_secret" "sm" {
   for_each                       = var.secrets
-  name                           = try(each.value["tf_outputs"], false) ? "/argocdValues/${try(each.value["secret_name_override"], each.key)}/${var.region}/${var.environment}/${each.value["cluster_name"]}/values.yaml" : (lookup(each.value, "name_prefix", null) == null ? each.key : null)
+  name                           = local.secrets_names[each.key]
   name_prefix                    = try(each.value["tf_outputs"], false) ? null : (lookup(each.value, "name_prefix", null) != null ? lookup(each.value, "name_prefix") : null)
   description                    = lookup(each.value, "description", null)
   kms_key_id                     = lookup(each.value, "kms_key_id", null)
